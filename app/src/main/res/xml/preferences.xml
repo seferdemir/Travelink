@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:summary="Account Settings"
+        android:title="Account">
+
+        <PreferenceScreen
+            android:key="ChangeEmail"
+            android:title="Change Email" />
+
+        <PreferenceScreen
+            android:key="ChangePassword"
+            android:title="Change Password" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

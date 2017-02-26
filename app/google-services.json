@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "664414532072",
+    "firebase_url": "https://travelink-242379.firebaseio.com",
+    "project_id": "travelink-242379",
+    "storage_bucket": "travelink-242379.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:664414532072:android:3b513e69e48188b7",
+        "android_client_info": {
+          "package_name": "com.bitlink.travelink"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "664414532072-8uks4a01ob12q1b92u4or6v2n3d16s4e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bitlink.travelink",
+            "certificate_hash": "5DCB31DF5484E26E8ADAE81B75C5547DB4551E4C"
+          }
+        },
+        {
+          "client_id": "664414532072-0htbhlioe4ao2b5i0qo1mbudjl0krrk8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCItH6VVwCP-Pp5-ScE1WeD4DTxrteVDE4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "664414532072-0htbhlioe4ao2b5i0qo1mbudjl0krrk8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

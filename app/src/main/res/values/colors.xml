@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3f3830</color>
+    <color name="colorPrimaryDark">#2f2a24</color>
+    <color name="colorAccent">#b3c100</color>
+    <color name="colorPrimary2">#6f6a64</color>
+    <color name="colorPrimaryDark2">#635f5b</color>
+    <color name="colorAccent2">#c6d140</color>
+    <color name="colorCircleFill">#4040C0D6</color>
+    <color name="colorCircleStroke">#8000acc1</color>
+    <color name="white">#FFFFFF</color>
+
+    <array name="categoryColors">
+        <item name="All" type="color">#C6D140</item>
+        <item name="Amphitheater" type="color">#C467F4</item>
+        <item name="Aquarium" type="color">#1ED2BB</item>
+        <item name="Art Gallery" type="color">#827F93</item>
+        <item name="Art Museum" type="color">#9F9FED</item>
+        <item name="Bike Trail" type="color">#002F2F</item>
+        <item name="Botanical Garden" type="color">#A6BF49</item>
+        <item name="Bridge" type="color">#91AA9D</item>
+        <item name="Buddhist Temple" type="color">#F6E497</item>
+        <item name="Campground" type="color">#F17051</item>
+        <item name="Canal" type="color">#6EC0BC</item>
+        <item name="Castle" type="color">#D96459</item>
+        <item name="Cave" type="color">#E3DB9A</item>
+        <item name="Church" type="color">#FCFAE1</item>
+        <item name="Circus" type="color">#FFBB00</item>
+        <item name="Confucian Temple" type="color">#73603D</item>
+        <item name="Fountain" type="color">#778DA9</item>
+        <item name="Hindu Temple" type="color">#BF8A49</item>
+        <item name="History Museum" type="color">#B29B7E</item>
+        <item name="Historic Site" type="color">#A7A37E</item>
+        <item name="Island" type="color">#F9CB8F</item>
+        <item name="Lake" type="color">#93EDD4</item>
+        <item name="Kingdom Hall" type="color">#F2CA80</item>
+        <item name="Memorial Site" type="color">#EFECCA</item>
+        <item name="Monastery" type="color">#C77966</item>
+        <item name="Monument / Landmark" type="color">#BD8D46</item>
+        <item name="Mosque" type="color">#7D9100</item>
+        <item name="National Park" type="color">#CDE855</item>
+        <item name="Palace" type="color">#B9121B</item>
+        <item name="Pier" type="color">#F2AE72</item>
+        <item name="Plaza" type="color">#9C9B7A</item>
+        <item name="Rafting" type="color">#3E606F</item>
+        <item name="River" type="color">#3b9AEE</item>
+        <item name="Scenic Lookout" type="color">#B1C2B3</item>
+        <item name="Sculpture Garden" type="color">#BD8D46</item>
+        <item name="Ski Area" type="color">#00B5F0</item>
+        <item name="Shrine" type="color">#FFFF9D</item>
+        <item name="Summer Camp" type="color">#AEEE00</item>
+        <item name="Synagogue" type="color">#C7B773</item>
+        <item name="Temple" type="color">#F2E394</item>
+        <item name="Theme Park" type="color">#407332</item>
+        <item name="Tourist Information Center" type="color">#FC6177</item>
+        <item name="Volcano" type="color">#FF2D00</item>
+        <item name="Water Park" type="color">#45BF55</item>
+        <item name="Waterfall" type="color">#47979F</item>
+    </array>
+
+</resources>

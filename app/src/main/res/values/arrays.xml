@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string-array name="categories">
+        <item>All Categories</item>
+        <item>Amphitheater</item>
+        <item>Aquarium</item>
+        <item>Art Gallery</item>
+        <item>Art Museum</item>
+        <item>Bike Trail</item>
+        <item>Botanical Garden</item>
+        <item>Bridge</item>
+        <item>Buddhist Temple</item>
+        <item>Campground</item>
+        <item>Canal</item>
+        <item>Castle</item>
+        <item>Cave</item>
+        <item>Church</item>
+        <item>Circus</item>
+        <item>Confucian Temple</item>
+        <item>Fountain</item>
+        <item>Hindu Temple</item>
+        <item>History Museum</item>
+        <item>Historic Site</item>
+        <item>Island</item>
+        <item>Lake</item>
+        <item>Kingdom Hall</item>
+        <item>Memorial Site</item>
+        <item>Monastery</item>
+        <item>Monument / Landmark</item>
+        <item>Mosque</item>
+        <item>National Park</item>
+        <item>Palace</item>
+        <item>Pier</item>
+        <item>Plaza</item>
+        <item>Rafting</item>
+        <item>River</item>
+        <item>Scenic Lookout</item>
+        <item>Sculpture Garden</item>
+        <item>Shrine</item>
+        <item>Ski Area</item>
+        <item>Summer Camp</item>
+        <item>Synagogue</item>
+        <item>Temple</item>
+        <item>Theme Park</item>
+        <item>Tourist Information Center</item>
+        <item>Volcano</item>
+        <item>Water Park</item>
+        <item>Waterfall</item>
+    </string-array>
+
+    <string-array name="categoryIds">
+        <item/>
+        <item>56aa371be4b08b9a8d5734db</item> // Amphitheater
+        <item>4fceea171983d5d06c3e9823</item> // Aquarium
+        <item>4bf58dd8d48988d1e2931735</item> // Art Gallery
+        <item>4bf58dd8d48988d18f941735</item> // Art Museum
+        <item>56aa371be4b08b9a8d57355e</item> // Bike Trail
+        <item>52e81612bcbc57f1066b7a22</item> // Botanical Garden
+        <item>4bf58dd8d48988d1df941735</item> // Bridge
+        <item>52e81612bcbc57f1066b7a3e</item> // Buddhist Temple
+        <item>4bf58dd8d48988d1e4941735</item> // Campground
+        <item>56aa371be4b08b9a8d573562</item> // Canal
+        <item>50aaa49e4b90af0d42d5de11</item> // Castle
+        <item>56aa371be4b08b9a8d573511</item> // Cave
+        <item>4bf58dd8d48988d132941735</item> // Church
+        <item>52e81612bcbc57f1066b79e7</item> // Circus
+        <item>56aa371be4b08b9a8d5734fc</item> // Confucian Temple
+        <item>56aa371be4b08b9a8d573547</item> // Fountain
+        <item>52e81612bcbc57f1066b7a3f</item> // Hindu Temple
+        <item>4bf58dd8d48988d190941735</item> // History Museum
+        <item>4deefb944765f83613cdba6e</item> // Historic Site
+        <item>50aaa4314b90af0d42d5de10</item> // Island
+        <item>4bf58dd8d48988d161941735</item> // Lake
+        <item>5744ccdfe4b0c0459246b4ac</item> // Kingdom Hall
+        <item>5642206c498e4bfca532186c</item> // Memorial Site
+        <item>52e81612bcbc57f1066b7a40</item> // Monastery
+        <item>4bf58dd8d48988d12d941735</item> // Monument / Landmark
+        <item>4bf58dd8d48988d138941735</item> // Mosque
+        <item>52e81612bcbc57f1066b7a21</item> // National Park
+        <item>52e81612bcbc57f1066b7a14</item> // Palace
+        <item>4e74f6cabd41c4836eac4c31</item> // Pier
+        <item>4bf58dd8d48988d164941735</item> // Plaza
+        <item>52e81612bcbc57f1066b7a29</item> // Rafting
+        <item>4eb1d4dd4b900d56c88a45fd</item> // River
+        <item>4bf58dd8d48988d165941735</item> // Scenic Lookout
+        <item>4bf58dd8d48988d166941735</item> // Sculpture Garden
+        <item>4eb1d80a4b900d56c88a45ff</item> // Shrine
+        <item>4bf58dd8d48988d1e9941735</item> // Ski Area
+        <item>52e81612bcbc57f1066b7a10</item> // Summer Camp
+        <item>4bf58dd8d48988d139941735</item> // Synagogue
+        <item>4bf58dd8d48988d13a941735</item> // Temple
+        <item>4bf58dd8d48988d182941735</item> // Theme Park
+        <item>4f4530164b9074f6e4fb00ff</item> // Tourist Information Center
+        <item>5032848691d4c4b30a586d61</item> // Volcano
+        <item>4bf58dd8d48988d193941735</item> // Water Park
+        <item>56aa371be4b08b9a8d573560</item> // Waterfall
+    </string-array>
+
+</resources>

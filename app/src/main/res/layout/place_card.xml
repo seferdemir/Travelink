@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_map_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view_notifications"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:layout_gravity="top|left|center_horizontal|right"
+        android:layout_marginBottom="@dimen/card_horizontal_margin"
+        android:layout_marginLeft="@dimen/card_horizontal_margin"
+        android:layout_marginRight="@dimen/card_horizontal_margin"
+        android:layout_marginTop="@dimen/card_horizontal_margin"
+        card_view:cardCornerRadius="@dimen/card_corner_radius"
+        card_view:cardElevation="3dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorAccent">
+
+            <com.joooonho.SelectableRoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/img_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="true"
+                android:scaleType="fitXY"
+                app:sriv_left_top_corner_radius="@dimen/card_corner_radius"
+                app:sriv_right_top_corner_radius="@dimen/card_corner_radius" />
+
+            <TextView
+                android:id="@+id/tv_venue_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:maxLines="4"
+                android:ellipsize="marquee"
+                android:foregroundGravity="top|left"
+                android:padding="@dimen/card_horizontal_margin"
+                android:ems="3"
+                android:text="AyasofyaAyasofyaAyasofyaAyasofyaAyasofyaAyasofyaAyasofyaAyasofyaAyasofyaAyasofyaAyasofyaAyasofyaAyasofyaAyasofyaAyasofyaAyasofyaAyasofyaAyasofyaAyasofyaAyasofya"
+                android:textSize="24sp"
+                android:textColor="@android:color/white"
+                android:gravity="bottom" />
+
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

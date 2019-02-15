@@ -91,12 +91,10 @@ public class PostShareActivity extends AppCompatActivity {
                     }
                 }
             } else {
-                Toast.makeText(this, "You haven't picked Image",
-                        Toast.LENGTH_LONG).show();
+                MainAppActivity.showText("You haven't picked Image");
             }
         } catch (Exception e) {
-            Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG)
-                    .show();
+            MainAppActivity.showText("Something went wrong");
         }
 
         super.onActivityResult(requestCode, resultCode, data);

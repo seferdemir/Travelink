@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitlink.travelink.R;
+import com.bitlink.travelink.activity.ConnectionActivity;
+import com.bitlink.travelink.activity.MainAppActivity;
 import com.bitlink.travelink.activity.ProfileActivity;
 import com.bitlink.travelink.model.User;
 import com.bitlink.travelink.util.AppContants;
@@ -42,7 +44,6 @@ public abstract class ConnectionListFragment extends Fragment {
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
 
-    private DatabaseReference mUserReference;
     private String mUserKey;
 
     public ConnectionListFragment() {
@@ -91,8 +92,9 @@ public abstract class ConnectionListFragment extends Fragment {
             throw new IllegalArgumentException("Must pass ARG_CONNECTION_FRAGMENT");
         }
 
-        // Initialize Database
-        mUserReference = mDatabase.child("users").child(mUserKey);
+        if(!mUserKey.equals(getUid())) {
+            ConnectionActivity.fab.setVisibility(View.GONE);
+        }
 
         // Set up FirebaseRecyclerAdapter with the Query
         Query usersQuery = getQuery(mDatabase);
@@ -114,62 +116,84 @@ public abstract class ConnectionListFragment extends Fragment {
                     }
                 });
 
-                if (user.photoUrl == null) {
+                if (user.getPhotoUrl() == null) {
                     viewHolder.photoView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.ic_account_circle));
                 } else {
                     Glide.with(getActivity())
-                            .load(user.photoUrl)
+                            .load(user.getPhotoUrl())
                             .into(viewHolder.photoView);
                 }
 
-                if (fragment.equals(AppContants.ConnectionFragment.Followers)) {
-                    viewHolder.unfollowView.setVisibility(View.GONE);
-                } else if (fragment.equals(AppContants.ConnectionFragment.Following)) {
+                if (fragment.equals(AppContants.ConnectionFragment.Following)) {
                     viewHolder.followView.setVisibility(View.GONE);
+
+                    mDatabase.child("user-following").child(getUid())
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    // Filter User
+                                    if (dataSnapshot.hasChild(userKey)) {
+                                        viewHolder.unfollowView.setVisibility(View.VISIBLE);
+                                    } else {
+                                        if (getUid().equals(userKey))
+                                            viewHolder.unfollowView.setVisibility(View.GONE);
+                                        else
+                                            viewHolder.unfollowView.setVisibility(View.VISIBLE);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+                                }
+                            });
                 } else {
                     viewHolder.unfollowView.setVisibility(View.GONE);
-                }
 
-                mDatabase.child("user-followers").child(user.uid)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                // Filter User
-                                if (dataSnapshot.hasChild(getUid())) {
-                                    viewHolder.followView.setVisibility(View.GONE);
-                                } else {
-                                    viewHolder.followView.setVisibility(View.VISIBLE);
+                    mDatabase.child("user-followers").child(userKey)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    // Filter User
+                                    if (dataSnapshot.hasChild(getUid())) {
+                                        viewHolder.followView.setVisibility(View.GONE);
+                                    } else {
+                                        if (userKey.equals(getUid()))
+                                            viewHolder.followView.setVisibility(View.GONE);
+                                        else
+                                            viewHolder.followView.setVisibility(View.VISIBLE);
+                                    }
                                 }
-                            }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                Log.w(TAG, "getUser:onCancelled", databaseError.toException());
-                            }
-                        });
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+                                }
+                            });
+                }
 
                 // Bind User to ViewHolder, setting OnClickListener for the star button
                 viewHolder.bindToUser(user, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         // Is the following user following back to the followed user
-//                        mDatabase.child("user-following").child(user.uid) -> karşılıklı takip
-                        mDatabase.child("user-followers").child(user.uid)
+//                        mDatabase.child("user-following").child(userKey) -> karşılıklı takip
+                        mDatabase.child("user-followers").child(userKey)
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         // Filter User
                                         if (dataSnapshot.hasChild(getUid())) {
-                                            Toast.makeText(getActivity(),
+                                            MainAppActivity.showText(
                                                     String.format("You are already following to %s",
-                                                            user.username), Toast.LENGTH_SHORT).show();
+                                                            user.getUsername()));
                                         } else {
-                                            Toast.makeText(getActivity(),
+                                            MainAppActivity.showText(
                                                     String.format("%s was followed",
-                                                            user.username), Toast.LENGTH_SHORT).show();
+                                                            user.getUsername()));
 
                                             // Need to write to both places the user is stored
-                                            DatabaseReference followerRef = mDatabase.child("users").child(user.uid);
+                                            DatabaseReference followerRef = mDatabase.child("users").child(userKey);
                                             DatabaseReference followingRef = mDatabase.child("users").child(getUid());
 
                                             Map<String, Object> userValues = user.toMap();
@@ -178,8 +202,8 @@ public abstract class ConnectionListFragment extends Fragment {
                                             Map<String, Object> childUpdates = new HashMap<>();
 
                                             // Create new places at /user-followers/$userid and the last place of the user's simultaneously
-                                            childUpdates.put("/user-following/" + getUid() + "/" + user.uid, userValues);
-                                            childUpdates.put("/user-followers/" + user.uid + "/" + getUid(), mUserValues);
+                                            childUpdates.put("/user-following/" + getUid() + "/" + userKey, userValues);
+                                            childUpdates.put("/user-followers/" + userKey + "/" + getUid(), mUserValues);
 
                                             mDatabase.updateChildren(childUpdates);
                                             // Run two transactions
@@ -191,7 +215,7 @@ public abstract class ConnectionListFragment extends Fragment {
                                                         return Transaction.success(mutableData);
                                                     }
 
-                                                    u.followingCount = u.followingCount + 1;
+                                                    u.setFollowingCount(u.getFollowingCount() + 1);
 
                                                     // Set value and report transaction success
                                                     mutableData.setValue(u);
@@ -214,7 +238,7 @@ public abstract class ConnectionListFragment extends Fragment {
                                                         return Transaction.success(mutableData);
                                                     }
 
-                                                    u.followerCount = u.followerCount + 1;
+                                                    u.setFollowerCount(u.getFollowerCount() + 1);
 
                                                     // Set value and report transaction success
                                                     mutableData.setValue(u);
@@ -243,17 +267,17 @@ public abstract class ConnectionListFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
 
-                        Toast.makeText(getActivity(),
+                        MainAppActivity.showText(
                                 String.format("%s was removed from the following",
-                                        user.username), Toast.LENGTH_SHORT).show();
+                                        user.getUsername()));
 
                         // Need to write to both places the user is stored
-                        DatabaseReference followerRef = mDatabase.child("users").child(user.uid);
+                        DatabaseReference followerRef = mDatabase.child("users").child(userKey);
                         DatabaseReference followingRef = mDatabase.child("users").child(getUid());
 
                         // Unfollow updates
-                        mDatabase.child("user-followers").child(user.uid).child(getUid()).removeValue();
-                        mDatabase.child("user-following").child(getUid()).child(user.uid).removeValue();
+                        mDatabase.child("user-followers").child(userKey).child(getUid()).removeValue();
+                        mDatabase.child("user-following").child(getUid()).child(userKey).removeValue();
 
                         // Run two transactions
                         followingRef.runTransaction(new Transaction.Handler() {
@@ -264,7 +288,7 @@ public abstract class ConnectionListFragment extends Fragment {
                                     return Transaction.success(mutableData);
                                 }
 
-                                u.followingCount = u.followingCount - 1;
+                                u.setFollowingCount(u.getFollowingCount() - 1);
 
                                 // Set value and report transaction success
                                 mutableData.setValue(u);
@@ -287,7 +311,7 @@ public abstract class ConnectionListFragment extends Fragment {
                                     return Transaction.success(mutableData);
                                 }
 
-                                u.followerCount = u.followerCount - 1;
+                                u.setFollowerCount(u.getFollowerCount() - 1);
 
                                 // Set value and report transaction success
                                 mutableData.setValue(u);

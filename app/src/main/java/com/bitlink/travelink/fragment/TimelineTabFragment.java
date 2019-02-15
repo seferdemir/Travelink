@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitlink.travelink.R;
+import com.bitlink.travelink.activity.MainAppActivity;
 import com.bitlink.travelink.activity.ProfileActivity;
 import com.bitlink.travelink.model.Place;
 import com.bitlink.travelink.model.User;
@@ -260,8 +261,7 @@ public class TimelineTabFragment extends Fragment implements OnMapReadyCallback 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     Log.w(TAG, "postTimeLines:onCancelled", databaseError.toException());
-                    Toast.makeText(mContext, "Failed to load timeLines.",
-                            Toast.LENGTH_SHORT).show();
+                    MainAppActivity.showText("Failed to load timeLines.");
                 }
             };
             ref.addChildEventListener(childEventListener);
@@ -289,21 +289,21 @@ public class TimelineTabFragment extends Fragment implements OnMapReadyCallback 
             TimeLine model = mTimeLines.get(position);
 
             if (model != null) {
-                if (model.status == OrderStatus.INACTIVE) {
+                if (model.getStatus() == OrderStatus.INACTIVE) {
                     holder.timelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_marker_inactive, R.color.colorAccent));
-                } else if (model.status == OrderStatus.ACTIVE) {
+                } else if (model.getStatus() == OrderStatus.ACTIVE) {
                     holder.timelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_marker_active, R.color.colorAccent));
                 } else {
                     holder.timelineView.setMarker(ContextCompat.getDrawable(mContext, R.drawable.ic_marker), ContextCompat.getColor(mContext, R.color.colorAccent));
                 }
 
-                if (model.place.checkinAt != null && !model.place.checkinAt.isEmpty()) {
+                if (model.getPlace().getCheckinAt() != null && !model.getPlace().getCheckinAt().isEmpty()) {
                     holder.dateView.setVisibility(View.VISIBLE);
-                    holder.dateView.setText(DateTimeUtils.parseDateTime(model.place.checkinAt, "yyyyMMddHHmmssSSS", "dd MMMM yyyy"));
+                    holder.dateView.setText(DateTimeUtils.parseDateTime(model.getPlace().getCheckinAt(), "yyyyMMddHHmmssSSS", "dd MMMM yyyy"));
                 } else
                     holder.dateView.setVisibility(View.GONE);
 
-                holder.messageView.setText(model.place.name);
+                holder.messageView.setText(model.getPlace().getName());
             }
         }
 
@@ -323,7 +323,7 @@ public class TimelineTabFragment extends Fragment implements OnMapReadyCallback 
             int position = mRecyclerView.getChildAdapterPosition(view);
             TimeLine timeLine = mTimeLines.get(position);
 
-            LatLng latLng = new LatLng(Double.valueOf(timeLine.place.latitude), Double.valueOf(timeLine.place.longitude));
+            LatLng latLng = new LatLng(Double.valueOf(timeLine.getPlace().getLatitude()), Double.valueOf(timeLine.getPlace().getLongitude()));
 
             mMap.clear();
             // Add a marker in location

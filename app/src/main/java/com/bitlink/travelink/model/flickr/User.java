@@ -8,7 +8,7 @@ public class User {
 
     private String nsid;
 
-    private String username;
+    private String name;
 
     private String fullname;
 
@@ -20,12 +20,12 @@ public class User {
         return this.nsid;
     }
 
-    public void setUsername(String username){
-        this.username = username;
+    public void setName(String name){
+        this.name = name;
     }
 
-    public String getUsername(){
-        return this.username;
+    public String getName(){
+        return this.name;
     }
 
     public void setFullname(String fullname){

@@ -28,7 +28,7 @@ public class ConnectionViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindToUser(User user, View.OnClickListener followClickListener, View.OnClickListener unfollowClickListener) {
-        userView.setText(user.username);
+        userView.setText(user.getUsername());
 
         followView.setOnClickListener(followClickListener);
         unfollowView.setOnClickListener(unfollowClickListener);

@@ -57,6 +57,7 @@ public class PostDetailActivity extends AppCompatActivity implements View.OnClic
     private EditText mCommentField;
     private Button mCommentButton;
     private RecyclerView mCommentsRecycler;
+    View focusView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,21 +129,21 @@ public class PostDetailActivity extends AppCompatActivity implements View.OnClic
                 // Get Post object and use the values to update the UI
                 Post post = dataSnapshot.getValue(Post.class);
 
-                mAuthorView.setText(post.author);
-                mTitleView.setText(post.title);
-                mBodyView.setText(post.body);
+                mAuthorView.setText(post.getAuthor());
+                mTitleView.setText(post.getTitle());
+                mBodyView.setText(post.getBody());
 
-                if (post.photoUrl == null) {
+                if (post.getPhotoUrl() == null) {
                     mAuthorPhotoView.setImageDrawable(ContextCompat
                             .getDrawable(getApplicationContext(),
                                     R.mipmap.ic_account_circle));
                 } else {
                     Glide.with(getApplicationContext())
-                            .load(post.photoUrl)
+                            .load(post.getPhotoUrl())
                             .into(mAuthorPhotoView);
                 }
 
-                mPlaceView.setText(post.place == null ? "" : post.place.name);
+                mPlaceView.setText(post.getPlace() == null ? "" : post.getPlace().getName());
             }
 
             @Override
@@ -150,8 +151,7 @@ public class PostDetailActivity extends AppCompatActivity implements View.OnClic
                 // Getting Post failed, log a placeName
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
                 // [START_EXCLUDE]
-                Toast.makeText(PostDetailActivity.this, "Failed to load post.",
-                        Toast.LENGTH_SHORT).show();
+                MainAppActivity.showText("Failed to load post.");
             }
         };
         mPostReference.addValueEventListener(postListener);
@@ -181,8 +181,24 @@ public class PostDetailActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.button_post_comment) {
+            if (!validate()) {
+                focusView.requestFocus();
+                return;
+            }
             postComment();
         }
+    }
+
+    private boolean validate() {
+
+        String comment = mCommentField.getText().toString();
+        if (comment.isEmpty() || comment.length() < 1) {
+            MainAppActivity.showText(getResources().getString(R.string.enter_valid_comment));
+            focusView = mCommentField;
+            return false;
+        }
+
+        return true;
     }
 
     private void postComment() {
@@ -193,11 +209,11 @@ public class PostDetailActivity extends AppCompatActivity implements View.OnClic
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // Get user information
                         User user = dataSnapshot.getValue(User.class);
-                        String authorName = user.username;
+                        String authorName = user.getUsername();
 
                         // Create new comment object
                         String commentText = mCommentField.getText().toString();
-                        Comment comment = new Comment(uid, authorName, commentText, user.photoUrl);
+                        Comment comment = new Comment(uid, authorName, commentText, user.getPhotoUrl());
 
                         // Push the comment, it will appear in the list
                         mCommentsReference.push().setValue(comment);
@@ -313,8 +329,7 @@ public class PostDetailActivity extends AppCompatActivity implements View.OnClic
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     Log.w(TAG, "postComments:onCancelled", databaseError.toException());
-                    Toast.makeText(mContext, "Failed to load comments.",
-                            Toast.LENGTH_SHORT).show();
+                    MainAppActivity.showText("Failed to load comments.");
                 }
             };
             ref.addChildEventListener(childEventListener);
@@ -333,16 +348,16 @@ public class PostDetailActivity extends AppCompatActivity implements View.OnClic
         @Override
         public void onBindViewHolder(CommentViewHolder holder, int position) {
             Comment comment = mComments.get(position);
-            holder.authorView.setText(comment.author);
-            holder.bodyView.setText(comment.text);
+            holder.authorView.setText(comment.getAuthor());
+            holder.bodyView.setText(comment.getText());
 
-            if (comment.photoUrl == null) {
+            if (comment.getPhotoUrl() == null) {
                 holder.commentPhoto
                         .setImageDrawable(ContextCompat.getDrawable(mContext,
                                 R.mipmap.ic_account_circle));
             } else {
                 Glide.with(mContext)
-                        .load(comment.photoUrl)
+                        .load(comment.getPhotoUrl())
                         .into(holder.commentPhoto);
             }
         }

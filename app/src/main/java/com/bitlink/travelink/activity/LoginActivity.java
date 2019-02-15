@@ -49,6 +49,8 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -109,12 +111,18 @@ public class LoginActivity extends AppCompatActivity {
 
                         if (u != null) {
                             // might be added the last login time
-//                            Map<String, Object> userValues = u.toMap();
-//
-//                            Map<String, Object> childUpdates = new HashMap<>();
-//                            childUpdates.put("/users/" + getUid() + "/", userValues);
-//
-//                            mDatabase.updateChildren(childUpdates);
+                            u.setUsername(user.getUsername());
+                            u.setBirthday(user.getBirthday());
+                            u.setEmail(user.getEmail());
+                            u.setGender(user.getGender());
+                            u.setPhotoUrl(user.getPhotoUrl());
+
+                            Map<String, Object> userValues = u.toMap();
+
+                            Map<String, Object> childUpdates = new HashMap<>();
+                            childUpdates.put("/users/" + getUid() + "/", userValues);
+
+                            mDatabase.updateChildren(childUpdates);
 
                         } else {
                             mDatabase.child("users").child(getUid()).setValue(user);
@@ -184,43 +192,48 @@ public class LoginActivity extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
 
-                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                /*GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
+
+                        Place lastLocation = new Place();
+
                         Log.i("LoginActivity", response.toString());
                         // Get facebook data from login
+
                         try {
                             String id = object.getString("id");
-                            model.photoUrl = new URL("https://graph.facebook.com/" + id + "/picture?width=200&height=200").toString();
-                            model.gender = object.getString("gender").equals("male") ? 0 : 1;
+                            model.setPhotoUrl(new URL("https://graph.facebook.com/" + id + "/picture?width=200&height=200").toString());
+                            model.setGender(object.getString("gender").equals("male") ? 0 : 1);
                             if (object.getString("birthday").equals(null)) {
                                 Date date = Calendar.getInstance().getTime();
                                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-                                model.birthday = dateFormat.format(date);
+                                model.setBirthday(dateFormat.format(date));
                             } else
-                                model.birthday = DateTimeUtils.parseDateTime(object.getString("birthday"), "MM/dd/yyyy", "yyyyMMdd");
-                            model.lastLocation = new Place();
-                            model.lastLocation.latitude = object.getJSONObject("location") != null ? object.getJSONObject("location").getString("latitude") :
-                                    mSharedPreferences.getString(ARG_LATITUDE, "0");
-                            model.lastLocation.longitude = object.getJSONObject("location") != null ? object.getJSONObject("location").getString("longitude") :
-                                    mSharedPreferences.getString(ARG_LONGITUDE, "0");
-                            model.lastLocation.name = String.format("%s",
+                                model.setBirthday(DateTimeUtils.parseDateTime(object.getString("birthday"), "MM/dd/yyyy", "yyyyMMdd"));
+
+                            lastLocation.setLatitude(object.getJSONObject("location") != null ? object.getJSONObject("location").getString("latitude") :
+                                    mSharedPreferences.getString(ARG_LATITUDE, "0"));
+                            lastLocation.setLongitude(object.getJSONObject("location") != null ? object.getJSONObject("location").getString("longitude") :
+                                    mSharedPreferences.getString(ARG_LONGITUDE, "0"));
+                            lastLocation.setName(String.format("%s",
                                     object.getJSONObject("location") != null ? object.getJSONObject("location").getString("name") :
-                                            mSharedPreferences.getString(ARG_LOCATION_NAME, getResources().getString(R.string.unknown)));
+                                            mSharedPreferences.getString(ARG_LOCATION_NAME, getResources().getString(R.string.unknown))));
                         } catch (JSONException e) {
-                            model.lastLocation.latitude = mSharedPreferences.getString(ARG_LATITUDE, "0");
-                            model.lastLocation.longitude = mSharedPreferences.getString(ARG_LONGITUDE, "0");
-                            model.lastLocation.name = mSharedPreferences.getString(ARG_LOCATION_NAME, getResources().getString(R.string.unknown));
+                            lastLocation.setLatitude(mSharedPreferences.getString(ARG_LATITUDE, "0"));
+                            lastLocation.setLongitude(mSharedPreferences.getString(ARG_LONGITUDE, "0"));
+                            lastLocation.setName(mSharedPreferences.getString(ARG_LOCATION_NAME, getResources().getString(R.string.unknown)));
                             e.printStackTrace();
                         } catch (MalformedURLException e) {
                             e.printStackTrace();
                         }
+                        model.setLastLocation(lastLocation);
                     }
                 });
                 Bundle parameters = new Bundle();
                 parameters.putString("fields", "id, first_name, last_name, email, gender, birthday, location");
                 request.setParameters(parameters);
-                request.executeAsync();
+                request.executeAsync();*/
 
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
@@ -254,11 +267,11 @@ public class LoginActivity extends AppCompatActivity {
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
-                            showText(getResources().getString(R.string.authentication_failed));
+                            MainAppActivity.showText(getResources().getString(R.string.authentication_failed));
                         } else {
-                            model.uid = getUid();
-                            model.username = mAuthCurrentUser.getDisplayName();
-                            model.email = mAuthCurrentUser.getEmail();
+                            model.setUid(getUid());
+                            model.setUsername(mAuthCurrentUser.getDisplayName());
+                            model.setEmail(mAuthCurrentUser.getEmail());
 
                             onLoginSuccess();
                         }
@@ -294,7 +307,7 @@ public class LoginActivity extends AppCompatActivity {
                             // signed in user can be handled in the listener.
                             if (!task.isSuccessful()) {
                                 Log.w(TAG, "signInAnonymously", task.getException());
-                                showText(getResources().getString(R.string.authentication_failed));
+                                MainAppActivity.showText(getResources().getString(R.string.authentication_failed));
                             } else {
                                 finish();
                             }
@@ -341,9 +354,9 @@ public class LoginActivity extends AppCompatActivity {
                     new android.os.Handler().postDelayed(
                             new Runnable() {
                                 public void run() {
-                                    model.uid = getUid();
-                                    model.username = mAuthCurrentUser.getDisplayName();
-                                    model.email = mAuthCurrentUser.getEmail();
+                                    model.setUid(getUid());
+                                    model.setUsername(mAuthCurrentUser.getDisplayName());
+                                    model.setEmail(mAuthCurrentUser.getEmail());
 
                                     onLoginSuccess();
                                     progressDialog.dismiss();
@@ -400,13 +413,13 @@ public class LoginActivity extends AppCompatActivity {
         String password = passwordText.getText().toString();
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            showText(getResources().getString(R.string.enter_valid_email));
+            MainAppActivity.showText(getResources().getString(R.string.enter_valid_email));
             focusView = emailText;
             return false;
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            showText(getResources().getString(R.string.enter_valid_password));
+            MainAppActivity.showText(getResources().getString(R.string.enter_valid_password));
             focusView = passwordText;
             return false;
         }
@@ -421,12 +434,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginFailed() {
-        showText(getResources().getString(R.string.login_failed));
+        MainAppActivity.showText(getResources().getString(R.string.login_failed));
 
         loginButton.setEnabled(true);
-    }
-
-    public void showText(String text) {
-        Toast.makeText(getBaseContext(), text, Toast.LENGTH_LONG).show();
     }
 }

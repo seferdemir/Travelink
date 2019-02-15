@@ -1,12 +1,15 @@
 package com.bitlink.travelink.fragment;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -105,6 +108,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnCameraIdleListe
     private Filter<Category> mFilter;
     private Location previousLocation;
     private boolean flag = true;
+    private final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -143,6 +147,45 @@ public class MapFragment extends Fragment implements GoogleMap.OnCameraIdleListe
 
         ButterKnife.bind(this, view);
 
+        mLocationProvider = new LocationProvider(mContext, this);
+
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.READ_CONTACTS)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                        PERMISSIONS_REQUEST_ACCESS_LOCATION);
+
+                // PERMISSIONS_REQUEST_ACCESS_LOCATION is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            setUpMap();
+            mLocationProvider.connect();
+        }
+
+        mViewPager = (ViewPager) view.findViewById(R.id.vp_details);
+
+        mFilter = (Filter<Category>) view.findViewById(R.id.filter);
+
+        return view;
+    }
+
+    private void setUpMap() {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         if (mapFragment == null) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -154,12 +197,32 @@ public class MapFragment extends Fragment implements GoogleMap.OnCameraIdleListe
             }
         }
         mapFragment.getMapAsync(this);
+    }
 
-        mViewPager = (ViewPager) view.findViewById(R.id.vp_details);
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    setUpMap();
+                    mLocationProvider.connect();
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
 
-        mFilter = (Filter<Category>) view.findViewById(R.id.filter);
+                } else {
 
-        return view;
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
     @Override
@@ -188,9 +251,6 @@ public class MapFragment extends Fragment implements GoogleMap.OnCameraIdleListe
         mFilter.build();
 
         mItemList = new ArrayList<Item_>();
-
-        mLocationProvider = new LocationProvider(mContext, this);
-        mLocationProvider.connect();
 
 //        new Handler().postDelayed(new Runnable() {
 //            @Override
@@ -463,8 +523,10 @@ public class MapFragment extends Fragment implements GoogleMap.OnCameraIdleListe
         mCurrentLocation = new LatLng(currentLatitude, currentLongitude);
 //            mCurrentLocation = new LatLng(41.007BitmapDescriptorFactory.HUE_RED4, 28.978196);
 
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, 15.0F));
-        makeRequestForPlaceList(mCurrentLocation.latitude, mCurrentLocation.longitude);
+        if (mMap != null) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, 15.0F));
+            makeRequestForPlaceList(mCurrentLocation.latitude, mCurrentLocation.longitude);
+        }
     }
 
     private void saveUserLocation(double lat, double lon) {
@@ -572,7 +634,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnCameraIdleListe
 
     @Override
     public boolean onMyLocationButtonClick() {
-//        Toast.makeText(mContext, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+//        MainAppActivity.showText("MyLocation button clicked");
         // Return false so that we don't consume the event and the default behavior still occurs
         // (the camera animates to the user's current position).
         return false;

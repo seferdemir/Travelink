@@ -89,16 +89,16 @@ public abstract class PostListFragment extends Fragment {
                         }
                     });
 
-                    if (model.photoUrl == null) {
+                    if (model.getPhotoUrl() == null) {
                         viewHolder.photoView.setImageDrawable(ContextCompat.getDrawable(getContext(), R.mipmap.ic_account_circle));
                     } else {
                         Glide.with(getActivity())
-                                .load(model.photoUrl)
+                                .load(model.getPhotoUrl())
                                 .into(viewHolder.photoView);
                     }
 
                     // Determine if the current user has liked this post and set UI accordingly
-                    if (model.stars.containsKey(getUid())) {
+                    if (model.getStars().containsKey(getUid())) {
                         viewHolder.starView.setImageResource(R.mipmap.ic_star);
                     } else {
                         viewHolder.starView.setImageResource(R.mipmap.ic_star_border);
@@ -110,7 +110,7 @@ public abstract class PostListFragment extends Fragment {
                         public void onClick(View starView) {
                             // Need to write to both places the post is stored
                             DatabaseReference globalPostRef = mDatabase.child("posts").child(postRef.getKey());
-                            DatabaseReference userPostRef = mDatabase.child("user-posts").child(model.uid).child(postRef.getKey());
+                            DatabaseReference userPostRef = mDatabase.child("user-posts").child(model.getUid()).child(postRef.getKey());
 
                             // Run two transactions
                             onStarClicked(globalPostRef);
@@ -133,14 +133,14 @@ public abstract class PostListFragment extends Fragment {
                     return Transaction.success(mutableData);
                 }
 
-                if (p.stars.containsKey(getUid())) {
+                if (p.getStars().containsKey(getUid())) {
                     // Unstar the post and remove self from stars
-                    p.starCount = p.starCount - 1;
-                    p.stars.remove(getUid());
+                    p.setStarCount(p.getStarCount() - 1);
+                    p.getStars().remove(getUid());
                 } else {
                     // Star the post and add self to stars
-                    p.starCount = p.starCount + 1;
-                    p.stars.put(getUid(), true);
+                    p.setStarCount(p.getStarCount() + 1);
+                    p.getStars().put(getUid(), true);
                 }
 
                 // Set value and report transaction success

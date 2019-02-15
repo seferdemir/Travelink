@@ -8,10 +8,10 @@ import java.util.Map;
 
 public class Message {
 
-    public long timestamp;
+    private long timestamp;
     private String id;
     private String text;
-    private String name;
+    private String author;
     private String photoUrl;
     private String senderUid;
     private String receiverUid;
@@ -19,17 +19,17 @@ public class Message {
     public Message() {
     }
 
-    public Message(String text, String name, String photoUrl, String senderUid) {
+    public Message(String text, String author, String photoUrl, String senderUid) {
         this.text = text;
-        this.name = name;
+        this.author = author;
         this.photoUrl = photoUrl;
         this.timestamp = new Date().getTime();
         this.senderUid = senderUid;
     }
 
-    public Message(String text, String name, String photoUrl, String senderUid, String receiverUid) {
+    public Message(String text, String author, String photoUrl, String senderUid, String receiverUid) {
         this.text = text;
-        this.name = name;
+        this.author = author;
         this.photoUrl = photoUrl;
         this.timestamp = new Date().getTime();
         this.senderUid = senderUid;
@@ -44,12 +44,12 @@ public class Message {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public String getPhotoUrl() {
@@ -97,7 +97,7 @@ public class Message {
         HashMap<String, Object> result = new HashMap<>();
         result.put("id", id);
         result.put("text", text);
-        result.put("name", name);
+        result.put("author", author);
         result.put("photoUrl", photoUrl);
         result.put("timestamp", timestamp);
         result.put("senderUid", senderUid);

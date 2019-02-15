@@ -1,5 +1,6 @@
 package com.bitlink.travelink.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,9 +23,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitlink.travelink.MyApplication;
 import com.bitlink.travelink.R;
 import com.bitlink.travelink.activity.ChatActivity;
 import com.bitlink.travelink.activity.ConnectionActivity;
+import com.bitlink.travelink.activity.EditProfileActivity;
+import com.bitlink.travelink.activity.MainAppActivity;
 import com.bitlink.travelink.activity.ProfileActivity;
 import com.bitlink.travelink.adapter.ProfileTabViewAdapter;
 import com.bitlink.travelink.model.User;
@@ -76,12 +81,15 @@ public class ProfileFragment extends Fragment {
     private DatabaseReference mUserReference;
     private ValueEventListener mUserListener;
     private String mUserKey;
+    private Context mContext;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
+
+        mContext = MainAppActivity.getContext();
 
         // Get user key from intent
         mUserKey = getArguments().getString(ProfileActivity.EXTRA_USER_KEY);
@@ -116,13 +124,17 @@ public class ProfileFragment extends Fragment {
 
                 if (user != null) {
 
-                    userFullname.setText(user.username);
+                    userFullname.setText(user.getUsername());
 
-                    if (user.photoUrl == null) {
-                        profileImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.ic_account_circle));
+                    if (user.getPhotoUrl() == null) {
+                        profileImage.setImageDrawable(ContextCompat.getDrawable(mContext, R.mipmap.ic_account_circle));
                     } else {
-                        Glide.with(getContext())
-                                .load(user.photoUrl)
+                        Context context = getContext();
+                        if (context == null)
+                            context = mContext;
+
+                        Glide.with(context)
+                                .load(user.getPhotoUrl())
                                 .centerCrop()
                                 .thumbnail(0.5f)
                                 .crossFade()
@@ -130,18 +142,22 @@ public class ProfileFragment extends Fragment {
                                 .into(profileImage);
                     }
 
-                    Glide.with(getContext())
+                    Context context = getContext();
+                    if (context == null)
+                        context = mContext;
+
+                    Glide.with(context)
                             .load(R.drawable.cover)
                             .crossFade()
                             .into(coverImage);
 
-                    tvFollowerCount.setText(user.followerCount == null ? "0" : String.valueOf(user.followerCount));
-                    tvFollowingCount.setText(user.followingCount == null ? "0" : String.valueOf(user.followingCount));
-                    tvPostCount.setText(user.postCount == null ? "0" : String.valueOf(user.postCount));
+                    tvFollowerCount.setText(user.getFollowerCount() == null ? "0" : String.valueOf(user.getFollowerCount()));
+                    tvFollowingCount.setText(user.getFollowingCount() == null ? "0" : String.valueOf(user.getFollowingCount()));
+                    tvPostCount.setText(user.getPostCount() == null ? "0" : String.valueOf(user.getPostCount()));
 
-                    tvLocation.setText(user.lastLocation == null ? "" : user.lastLocation.name);
+                    tvLocation.setText(user.getLastLocation() == null ? "" : user.getLastLocation().getName());
 
-                    mDatabase.child("user-followers").child(user.uid)
+                    mDatabase.child("user-followers").child(user.getUid())
                             .addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -172,22 +188,22 @@ public class ProfileFragment extends Fragment {
                         public void onClick(View view) {
                             // Is the following user following back to the followed user
 //                          mDatabase.child("user-following").child(user.uid) -> karşılıklı takip
-                            mDatabase.child("user-followers").child(user.uid)
+                            mDatabase.child("user-followers").child(user.getUid())
                                     .addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                             // Filter User
                                             if (dataSnapshot.hasChild(getUid())) {
-                                                Toast.makeText(getActivity(),
+                                                MainAppActivity.showText(
                                                         String.format("You are already following to %s",
-                                                                user.username), Toast.LENGTH_SHORT).show();
+                                                                user.getUsername()));
                                             } else {
-                                                Toast.makeText(getActivity(),
+                                                MainAppActivity.showText(
                                                         String.format("%s was followed",
-                                                                user.username), Toast.LENGTH_SHORT).show();
+                                                                user.getUsername()));
 
                                                 // Need to write to both places the user is stored
-                                                DatabaseReference followerRef = mDatabase.child("users").child(user.uid);
+                                                DatabaseReference followerRef = mDatabase.child("users").child(user.getUid());
                                                 DatabaseReference followingRef = mDatabase.child("users").child(getUid());
 
                                                 Map<String, Object> userValues = user.toMap();
@@ -196,8 +212,8 @@ public class ProfileFragment extends Fragment {
                                                 Map<String, Object> childUpdates = new HashMap<>();
 
                                                 // Create new places at /user-followers/$userid and the last place of the user's simultaneously
-                                                childUpdates.put("/user-following/" + getUid() + "/" + user.uid, userValues);
-                                                childUpdates.put("/user-followers/" + user.uid + "/" + getUid(), mUserValues);
+                                                childUpdates.put("/user-following/" + getUid() + "/" + user.getUid(), userValues);
+                                                childUpdates.put("/user-followers/" + user.getUid() + "/" + getUid(), mUserValues);
 
                                                 mDatabase.updateChildren(childUpdates);
                                                 // Run two transactions
@@ -209,7 +225,7 @@ public class ProfileFragment extends Fragment {
                                                             return Transaction.success(mutableData);
                                                         }
 
-                                                        u.followingCount = u.followingCount + 1;
+                                                        u.setFollowingCount(u.getFollowingCount() + 1);
 
                                                         // Set value and report transaction success
                                                         mutableData.setValue(u);
@@ -232,7 +248,7 @@ public class ProfileFragment extends Fragment {
                                                             return Transaction.success(mutableData);
                                                         }
 
-                                                        u.followerCount = u.followerCount + 1;
+                                                        u.setFollowerCount(u.getFollowerCount() + 1);
 
                                                         // Set value and report transaction success
                                                         mutableData.setValue(u);
@@ -261,7 +277,7 @@ public class ProfileFragment extends Fragment {
                     sendMessageButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent intent = new Intent(getActivity(), ChatActivity.class);
+                            Intent intent = new Intent(mContext, ChatActivity.class);
                             intent.putExtra(ProfileActivity.EXTRA_USER_KEY, mUserKey);
                             intent.putExtra(AppContants.ARG_CHAT_TYPE, 1); // Private
                             startActivity(intent);
@@ -314,7 +330,7 @@ public class ProfileFragment extends Fragment {
         followerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ConnectionActivity.class);
+                Intent intent = new Intent(mContext, ConnectionActivity.class);
                 intent.putExtra(ProfileActivity.EXTRA_USER_KEY, mUserKey);
                 intent.putExtra(AppContants.ARG_CONNECTION_FRAGMENT, 0);
                 startActivity(intent);
@@ -325,7 +341,7 @@ public class ProfileFragment extends Fragment {
         followingLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ConnectionActivity.class);
+                Intent intent = new Intent(mContext, ConnectionActivity.class);
                 intent.putExtra(ProfileActivity.EXTRA_USER_KEY, mUserKey);
                 intent.putExtra(AppContants.ARG_CONNECTION_FRAGMENT, 1);
                 startActivity(intent);
@@ -351,4 +367,18 @@ public class ProfileFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_edit_profile) {
+            startActivity(new Intent(mContext, EditProfileActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

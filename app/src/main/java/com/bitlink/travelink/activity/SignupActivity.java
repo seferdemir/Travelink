@@ -107,7 +107,7 @@ public class SignupActivity extends AppCompatActivity {
         genderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                model.gender = parent.getItemAtPosition(pos).equals("Male") ? 0 : 1;
+                model.setGender(parent.getItemAtPosition(pos).equals("Male") ? 0 : 1);
             }
 
             @Override
@@ -133,8 +133,8 @@ public class SignupActivity extends AppCompatActivity {
         String email = emailText.getText().toString();
         String password = passwordText.getText().toString();
 
-        model.username = name;
-        model.email = email;
+        model.setUsername(name);
+        model.setEmail(email);
 
         createAccountButton.setEnabled(false);
 
@@ -155,16 +155,17 @@ public class SignupActivity extends AppCompatActivity {
                     new android.os.Handler().postDelayed(
                             new Runnable() {
                                 public void run() {
-                                    model.uid = task.getResult().getUser().getUid();
-                                    model.lastLocation = new Place();
-                                    model.lastLocation.latitude = mSharedPreferences.getString(ARG_LATITUDE, "0");
-                                    model.lastLocation.longitude = mSharedPreferences.getString(ARG_LONGITUDE, "0");
+                                    model.setUid(task.getResult().getUser().getUid());
+                                    Place lastLocation = new Place();
+                                    lastLocation.setLatitude(mSharedPreferences.getString(ARG_LATITUDE, "0"));
+                                    lastLocation.setLongitude(mSharedPreferences.getString(ARG_LONGITUDE, "0"));
 
                                     Calendar calendar = Calendar.getInstance();
                                     Date date = calendar.getTime();
                                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-                                    model.lastLocation.checkinAt = dateFormat.format(date);
-                                    model.lastLocation.name = getResources().getString(R.string.unknown);
+                                    lastLocation.setCheckinAt(dateFormat.format(date));
+                                    lastLocation.setName(getResources().getString(R.string.unknown));
+                                    model.setLastLocation(lastLocation);
 
                                     onSignupSuccess();
                                     progressDialog.dismiss();
@@ -177,7 +178,7 @@ public class SignupActivity extends AppCompatActivity {
 
     public void onSignupSuccess() {
         writeNewUser(model);
-        showText(getResources().getString(R.string.create_successful));
+        MainAppActivity.showText(getResources().getString(R.string.create_successful));
         createAccountButton.setEnabled(true);
         setResult(RESULT_OK, null);
 
@@ -187,7 +188,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     public void onSignupFailed() {
-        showText(getResources().getString(R.string.signup_failed));
+        MainAppActivity.showText(getResources().getString(R.string.sign_up_failed));
         createAccountButton.setEnabled(true);
         progressDialog.dismiss();
     }
@@ -199,28 +200,24 @@ public class SignupActivity extends AppCompatActivity {
         String password = passwordText.getText().toString();
 
         if (name.isEmpty() || name.length() < 3) {
-            showText(getResources().getString(R.string.enter_valid_name));
+            MainAppActivity.showText(getResources().getString(R.string.enter_valid_name));
             focusView = nameText;
             return false;
         }
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            showText(getResources().getString(R.string.enter_valid_email));
+            MainAppActivity.showText(getResources().getString(R.string.enter_valid_email));
             focusView = emailText;
             return false;
         }
 
         if (password.isEmpty() || password.length() < 6 || password.length() > 10) {
-            showText(getResources().getString(R.string.enter_valid_password));
+            MainAppActivity.showText(getResources().getString(R.string.enter_valid_password));
             focusView = passwordText;
             return false;
         }
 
         return true;
-    }
-
-    public void showText(String text) {
-        Toast.makeText(getBaseContext(), text, Toast.LENGTH_LONG).show();
     }
 
     public void setBirthDay(View view) {
@@ -235,7 +232,7 @@ public class SignupActivity extends AppCompatActivity {
                 newDate.set(year, monthOfYear, dayOfMonth);
 
                 birtDayText.setText(new SimpleDateFormat("dd MMMM yyyy EEEE").format(newDate.getTime()));
-                model.birthday = new SimpleDateFormat("yyyyMMdd").format(newDate.getTime());
+                model.setBirthday(new SimpleDateFormat("yyyyMMdd").format(newDate.getTime()));
             }
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
 

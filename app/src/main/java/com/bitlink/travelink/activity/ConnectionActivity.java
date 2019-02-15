@@ -29,6 +29,8 @@ public class ConnectionActivity extends AppCompatActivity {
     private ValueEventListener mUserListener;
     private String mUserKey;
 
+    public static FloatingActionButton fab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,12 +53,12 @@ public class ConnectionActivity extends AppCompatActivity {
         // Initialize Database
         mUserReference = mDatabase.child("users").child(mUserKey);
 
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_add_connection);
+        fab = (FloatingActionButton) findViewById(R.id.fab_add_connection);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mAuthCurrentUser == null || mAuthCurrentUser.isAnonymous()) {
-                    Toast.makeText(ConnectionActivity.this, "You must sign-in to post.", Toast.LENGTH_SHORT).show();
+                    MainAppActivity.showText("You must sign-in to post.");
                     return;
                 }
 

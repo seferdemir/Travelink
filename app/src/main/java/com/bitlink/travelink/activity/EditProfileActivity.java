@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,21 +27,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitlink.travelink.R;
+import com.bitlink.travelink.model.User;
 import com.bitlink.travelink.util.DateTimeUtils;
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.bitlink.travelink.activity.LoginActivity.writeNewUser;
+import static com.bitlink.travelink.activity.MainAppActivity.getUid;
+import static com.bitlink.travelink.activity.MainAppActivity.mDatabase;
 import static com.bitlink.travelink.activity.MainAppActivity.mUser;
 
 public class EditProfileActivity extends AppCompatActivity {
@@ -115,7 +123,7 @@ public class EditProfileActivity extends AppCompatActivity {
         genderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                mUser.gender = parent.getItemAtPosition(pos).equals("Male") ? 0 : 1;
+                mUser.setGender(parent.getItemAtPosition(pos).equals("Male") ? 0 : 1);
             }
 
             @Override
@@ -124,14 +132,14 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         Glide.with(this)
-                .load(mUser.photoUrl)
+                .load(mUser.getPhotoUrl())
                 .into(imgPerson);
 
-        genderSpinner.setId(mUser.gender);
+        genderSpinner.setId(mUser.getGender());
 
-        birtDayText.setText(DateTimeUtils.parseDateTime(mUser.birthday, "yyyyMMdd", "dd MMMM yyyy EEEE"));
-        nameText.setText(mUser.username);
-        emailText.setText(mUser.email);
+        birtDayText.setText(DateTimeUtils.parseDateTime(mUser.getBirthday(), "yyyyMMdd", "dd MMMM yyyy EEEE"));
+        nameText.setText(mUser.getUsername());
+        emailText.setText(mUser.getEmail());
     }
 
     @OnClick(R.id.fab)
@@ -183,11 +191,45 @@ public class EditProfileActivity extends AppCompatActivity {
                 return false;
             }
 
-            mUser.username = nameText.getText().toString();
-            mUser.email = emailText.getText().toString();
-            mUser.gender = (int) genderSpinner.getSelectedItemId();
+            mUser.setUsername(nameText.getText().toString());
+            mUser.setEmail(emailText.getText().toString());
+            mUser.setGender((int) genderSpinner.getSelectedItemId());
 
-            writeNewUser(mUser);
+            mDatabase.child("users").child(getUid()).addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            // Get user value
+                            User u = dataSnapshot.getValue(User.class);
+
+                            if (u != null) {
+                                // might be added the last login time
+                                u.setUsername(mUser.getUsername());
+                                u.setBirthday(mUser.getBirthday());
+                                u.setEmail(mUser.getEmail());
+                                u.setGender(mUser.getGender());
+                                u.setPhotoUrl(mUser.getPhotoUrl());
+
+                                Map<String, Object> userValues = u.toMap();
+
+                                Map<String, Object> childUpdates = new HashMap<>();
+                                childUpdates.put("/users/" + getUid() + "/", userValues);
+
+                                mDatabase.updateChildren(childUpdates);
+
+                            } else {
+                                mDatabase.child("users").child(getUid()).setValue(mUser);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w("LoginActivity", "getUser:onCancelled", databaseError.toException());
+                        }
+                    });
+
+            MainAppActivity.showText("The changes were saved.");
+            finish();
 
             return true;
         }
@@ -201,13 +243,13 @@ public class EditProfileActivity extends AppCompatActivity {
         String fullname = nameText.getText().toString();
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            showText(getResources().getString(R.string.enter_valid_email));
+            MainAppActivity.showText(getResources().getString(R.string.enter_valid_email));
             focusView = emailText;
             return false;
         }
 
         if (fullname.isEmpty() || fullname.length() < 3 || fullname.length() > 25) {
-            showText(getResources().getString(R.string.enter_name));
+            MainAppActivity.showText(getResources().getString(R.string.enter_name));
             focusView = nameText;
             return false;
         }
@@ -227,7 +269,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 newDate.set(year, monthOfYear, dayOfMonth);
 
                 birtDayText.setText(new SimpleDateFormat("dd MMMM yyyy EEEE").format(newDate.getTime()));
-                mUser.birthday = new SimpleDateFormat("yyyyMMdd").format(newDate.getTime());
+                mUser.setBirthday(new SimpleDateFormat("yyyyMMdd").format(newDate.getTime()));
             }
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
 
@@ -244,11 +286,8 @@ public class EditProfileActivity extends AppCompatActivity {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
-        mUser.photoUrl = Base64.encodeToString(byteArray, Base64.DEFAULT);
+        mUser.setPhotoUrl(Base64.encodeToString(byteArray, Base64.DEFAULT));
     }
 
-    public void showText(String text) {
-        Toast.makeText(getBaseContext(), text, Toast.LENGTH_LONG).show();
-    }
 }
 

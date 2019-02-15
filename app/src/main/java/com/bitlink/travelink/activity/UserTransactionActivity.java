@@ -189,37 +189,37 @@ public class UserTransactionActivity extends Activity {
     }
 
     private void onChangeEmailSuccess() {
-        showText(getResources().getString(R.string.change_email_successful));
+        MainAppActivity.showText(getResources().getString(R.string.change_email_successful));
         changeEmailButton.setEnabled(true);
         finish();
     }
 
     private void onChangeEmailFailed() {
-        showText(getResources().getString(R.string.change_email_failed));
+        MainAppActivity.showText(getResources().getString(R.string.change_email_failed));
         changeEmailButton.setEnabled(true);
         progressDialog.dismiss();
     }
 
     private void onChangePasswordSuccess() {
-        showText(getResources().getString(R.string.change_password_successful));
+        MainAppActivity.showText(getResources().getString(R.string.change_password_successful));
         changePasswordButton.setEnabled(true);
         finish();
     }
 
     private void onChangePasswordFailed() {
-        showText(getResources().getString(R.string.change_password_failed));
+        MainAppActivity.showText(getResources().getString(R.string.change_password_failed));
         changePasswordButton.setEnabled(true);
         progressDialog.dismiss();
     }
 
     private void onSendResetEmailSuccess() {
-        showText(getResources().getString(R.string.sent_email_to_reset_password));
+        MainAppActivity.showText(getResources().getString(R.string.sent_email_to_reset_password));
         resetPasswordButton.setEnabled(true);
         finish();
     }
 
     private void onSendResetEmailFailed() {
-        showText(getResources().getString(R.string.send_reset_email_failed));
+        MainAppActivity.showText(getResources().getString(R.string.send_reset_email_failed));
         resetPasswordButton.setEnabled(true);
         progressDialog.dismiss();
     }
@@ -230,14 +230,14 @@ public class UserTransactionActivity extends Activity {
         String password = passwordText.getText().toString();
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            showText(getResources().getString(R.string.enter_valid_email));
+            MainAppActivity.showText(getResources().getString(R.string.enter_valid_email));
             focusView = emailText;
             return false;
         }
 
         if (transaction == UserTransactions.ChangePassword) {
             if (password.isEmpty() || password.length() < 6 || password.length() > 10) {
-                showText(getResources().getString(R.string.enter_valid_password));
+                MainAppActivity.showText(getResources().getString(R.string.enter_valid_password));
                 focusView = passwordText;
                 return false;
             }
@@ -246,9 +246,5 @@ public class UserTransactionActivity extends Activity {
         }
 
         return true;
-    }
-
-    private void showText(String text) {
-        Toast.makeText(getBaseContext(), text, Toast.LENGTH_LONG).show();
     }
 }

@@ -33,11 +33,11 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindToPost(Post post, View.OnClickListener starClickListener) {
-        titleView.setText(post.title);
-        authorView.setText(post.author);
-        numStarsView.setText(String.valueOf(post.starCount));
-        bodyView.setText(post.body);
-        placeView.setText(post.place == null ? "" : post.place.name);
+        titleView.setText(post.getTitle());
+        authorView.setText(post.getAuthor());
+        numStarsView.setText(String.valueOf(post.getStarCount()));
+        bodyView.setText(post.getBody());
+        placeView.setText(post.getPlace() == null ? "" : post.getPlace().getName());
 
         starView.setOnClickListener(starClickListener);
     }

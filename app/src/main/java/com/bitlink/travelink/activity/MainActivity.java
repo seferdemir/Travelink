@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -24,6 +25,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bitlink.travelink.MyApplication;
 import com.bitlink.travelink.R;
 import com.bitlink.travelink.adapter.TabViewAdapter;
 import com.bitlink.travelink.fragment.CommonChatFragment;
@@ -50,11 +52,11 @@ import static com.bitlink.travelink.activity.MainAppActivity.getUid;
 import static com.bitlink.travelink.activity.MainAppActivity.mAuth;
 import static com.bitlink.travelink.activity.MainAppActivity.mAuthCurrentUser;
 import static com.bitlink.travelink.activity.MainAppActivity.mAuthStateListener;
+import static com.bitlink.travelink.activity.MainAppActivity.mUser;
 
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = MainActivity.class.getSimpleName();
-    private final int LOCATION_REQUEST = 100;
     private final int PROFILE_SETTING = 100000;
     private final int HOME = 2;
     private final int LOGIN = 1;
@@ -80,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
 
         final AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appBar);
 
+        MainAppActivity.setContext(this);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
         }
@@ -92,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 FirebaseUser user = mAuth.getCurrentUser();
                 if (user == null || user.isAnonymous()) {
-                    Toast.makeText(MainActivity.this, "You must sign-in to post.", Toast.LENGTH_SHORT).show();
+                    MainAppActivity.showText("You must sign-in to post.");
                     return;
                 }
                 startActivity(new Intent(MainActivity.this, NewPostActivity.class)); // PostShareActivity
@@ -285,13 +289,14 @@ public class MainActivity extends AppCompatActivity {
                     // Create a few sample profile
                     if (headerResult.getActiveProfile() == null) {
                         profile = new ProfileDrawerItem()
-                                .withName(mAuthCurrentUser.getDisplayName())
-                                .withEmail(mAuthCurrentUser.getEmail())
-                                .withIcon(mAuthCurrentUser.getPhotoUrl())
+                                .withName(mUser.getUsername())
+                                .withEmail(mUser.getEmail())
                                 .withIdentifier(1);
 
-                        if (mAuthCurrentUser.getPhotoUrl() == null)
-                            profile.withIcon(getResources().getDrawable(R.mipmap.ic_account_circle));
+                        if (mUser.getPhotoUrl() != null)
+                            profile.withIcon(mUser.getPhotoUrl());
+                        else
+                            profile.withIcon(ContextCompat.getDrawable(MainActivity.this, R.mipmap.ic_account_circle));
 
                         headerResult.addProfiles(profile,
                                 new ProfileSettingDrawerItem()
@@ -344,8 +349,6 @@ public class MainActivity extends AppCompatActivity {
 
 //            getSupportFragmentManager().beginTransaction().replace(R.id.flContent, mFragment).commit();
         }
-
-//        mDatabase.child("Places").child("City").push().setValue("Konya");
     }
 
     @Override
@@ -394,26 +397,15 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(MainActivity.this, MyPreferencesActivity.class));
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-
-            case LOCATION_REQUEST:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    handleFirstLocation(getCurrentLocation());
-                }
-                break;
-        }
-    }
-
     private boolean canAccessLocation() {
-        return (hasPermission(Manifest.permission.ACCESS_FINE_LOCATION));
+        return (hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) || hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION));
     }
 
     @TargetApi(Build.VERSION_CODES.M)

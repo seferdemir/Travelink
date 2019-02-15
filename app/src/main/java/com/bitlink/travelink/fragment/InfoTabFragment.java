@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitlink.travelink.R;
+import com.bitlink.travelink.activity.MainAppActivity;
 import com.bitlink.travelink.activity.ProfileActivity;
 import com.bitlink.travelink.model.User;
 import com.bitlink.travelink.util.DateTimeUtils;
@@ -102,16 +103,17 @@ public class InfoTabFragment extends Fragment implements OnMapReadyCallback {
                 User user = dataSnapshot.getValue(User.class);
 
                 if (user != null) {
-                    mUserFullname = user.username;
+                    mUserFullname = user.getUsername();
                     textViewFullname.setText(mUserFullname);
-                    if (user.gender != null)
-                        textViewGender.setText(user.gender == 0 ? getResources().getString(R.string.male) : getResources().getString(R.string.female));
-                    if (user.birthday != null)
-                        textViewBirthday.setText(DateTimeUtils.parseDateTime(user.birthday, "yyyyMMdd", "dd MMMM yyyy"));
-                    textViewEMail.setText(user.email);
-                    if (user.lastLocation != null && user.lastLocation.latitude != null && user.lastLocation.longitude != null)
-                        mLastKnownLocation = new LatLng(Double.valueOf(user.lastLocation.latitude),
-                                Double.valueOf(user.lastLocation.longitude));
+                    if (user.getGender() != null)
+                        textViewGender.setText(user.getGender() == 0 ? getResources().getString(R.string.male) : getResources().getString(R.string.female));
+                    if (user.getBirthday() != null)
+                        textViewBirthday.setText(DateTimeUtils.parseDateTime(user.getBirthday(), "yyyyMMdd", "dd MMMM yyyy"));
+                    textViewEMail.setText(user.getEmail());
+                    if (user.getLastLocation() != null && user.getLastLocation().getLatitude() != null &&
+                            user.getLastLocation().getLongitude() != null)
+                        mLastKnownLocation = new LatLng(Double.valueOf(user.getLastLocation().getLatitude()),
+                                Double.valueOf(user.getLastLocation().getLongitude()));
                 }
             }
 
@@ -119,9 +121,8 @@ public class InfoTabFragment extends Fragment implements OnMapReadyCallback {
             public void onCancelled(DatabaseError databaseError) {
                 // Getting Post failed, log a placeName
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                // [START_EXCLUDE]
-                Toast.makeText(getContext(), "Failed to load post.",
-                        Toast.LENGTH_SHORT).show();
+
+                MainAppActivity.showText("Failed to load post.");
             }
         });
     }

@@ -61,7 +61,7 @@ public class ChatActivity extends AppCompatActivity {
 
                         if (user != null) {
                             // Set user's name text to the toolbar
-                            mToolbar.setTitle(user.username);
+                            mToolbar.setTitle(user.getUsername());
                         }
                     }
 

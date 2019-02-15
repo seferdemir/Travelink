@@ -8,8 +8,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class TimeLine implements Parcelable {
 
-    public Place place;
-    public OrderStatus status;
+    private Place place;
+    private OrderStatus status;
 
     public enum OrderStatus {
         COMPLETED,
@@ -53,4 +53,20 @@ public class TimeLine implements Parcelable {
             return new TimeLine[size];
         }
     };
+
+    public Place getPlace() {
+        return place;
+    }
+
+    public void setPlace(Place place) {
+        this.place = place;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
 }

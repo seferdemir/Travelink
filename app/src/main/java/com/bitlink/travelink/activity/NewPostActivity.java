@@ -163,14 +163,14 @@ public class NewPostActivity extends AppCompatActivity {
                 placeName = String.format("%s, %s", placeName, country);
                 mPlaceTextView.setText(placeName);
 
-                mPlace.name = placeName;
-                mPlace.latitude = latitude;
-                mPlace.longitude = longitude;
+                mPlace.setName(placeName);
+                mPlace.setLatitude(latitude);
+                mPlace.setLongitude(longitude);
 
                 Calendar calendar = Calendar.getInstance();
                 Date date = calendar.getTime();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-                mPlace.checkinAt = dateFormat.format(date);
+                mPlace.setCheckinAt(dateFormat.format(date));
             }
         }
     }
@@ -193,7 +193,7 @@ public class NewPostActivity extends AppCompatActivity {
 
         // Disable button so there are no multi-posts
         setEditingEnabled(false);
-        Toast.makeText(this, "Posting...", Toast.LENGTH_SHORT).show();
+        MainAppActivity.showText("Posting...");
 
         final String userId = getUid();
         mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
@@ -206,12 +206,10 @@ public class NewPostActivity extends AppCompatActivity {
                         if (user == null) {
                             // User is null, error out
                             Log.e(TAG, "User " + userId + " is unexpectedly null");
-                            Toast.makeText(NewPostActivity.this,
-                                    "Error: could not fetch user.",
-                                    Toast.LENGTH_SHORT).show();
+                            MainAppActivity.showText("Error: could not fetch user.");
                         } else {
                             // Write new post
-                            writeNewPost(userId, user.username, title, body, user.photoUrl);
+                            writeNewPost(userId, user.getUsername(), title, body, user.getPhotoUrl());
                         }
 
                         // Finish this Activity, back to the stream
@@ -238,11 +236,11 @@ public class NewPostActivity extends AppCompatActivity {
         }
     }
 
-    private void writeNewPost(final String userId, String username, String title, String body, String photoUrl) {
+    private void writeNewPost(final String userId, String name, String title, String body, String photoUrl) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         final String key = mDatabase.child("posts").push().getKey();
-        Post post = new Post(userId, username, title, body, photoUrl, mPlace);
+        Post post = new Post(userId, name, title, body, photoUrl, mPlace);
         Map<String, Object> postValues = post.toMap();
         Map<String, Object> placeValues = mPlace.toMap();
 
@@ -263,8 +261,8 @@ public class NewPostActivity extends AppCompatActivity {
                     return Transaction.success(mutableData);
                 }
 
-                u.postCount = u.postCount + 1;
-                u.lastLocation = mPlace;
+                u.setPostCount(u.getPostCount() + 1);
+                u.setLastLocation(mPlace);
 
                 // Set value and report transaction success
                 mutableData.setValue(u);

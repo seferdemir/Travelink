@@ -12,16 +12,16 @@ import java.util.Map;
 
 public class User implements Parcelable {
 
-    public String username;
-    public String email;
-    public String photoUrl;
-    public String birthday;
-    public Integer gender;
-    public Place lastLocation;
-    public Integer followerCount;
-    public Integer followingCount;
-    public Integer postCount;
-    public String uid;
+    private String username;
+    private String email;
+    private String photoUrl;
+    private String birthday;
+    private Integer gender;
+    private Place lastLocation;
+    private Integer followerCount;
+    private Integer followingCount;
+    private Integer postCount;
+    private String uid;
 
     @Override
     public int describeContents() {
@@ -101,4 +101,83 @@ public class User implements Parcelable {
         return result;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    public Place getLastLocation() {
+        return lastLocation;
+    }
+
+    public void setLastLocation(Place lastLocation) {
+        this.lastLocation = lastLocation;
+    }
+
+    public Integer getFollowerCount() {
+        return followerCount;
+    }
+
+    public void setFollowerCount(Integer followerCount) {
+        this.followerCount = followerCount;
+    }
+
+    public Integer getFollowingCount() {
+        return followingCount;
+    }
+
+    public void setFollowingCount(Integer followingCount) {
+        this.followingCount = followingCount;
+    }
+
+    public Integer getPostCount() {
+        return postCount;
+    }
+
+    public void setPostCount(Integer postCount) {
+        this.postCount = postCount;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 }

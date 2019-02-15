@@ -45,8 +45,8 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.bitlink.travelink.activity.MainAppActivity.getUid;
-import static com.bitlink.travelink.activity.MainAppActivity.mAuthCurrentUser;
 import static com.bitlink.travelink.activity.MainAppActivity.mDatabase;
+import static com.bitlink.travelink.activity.MainAppActivity.mUser;
 import static com.bitlink.travelink.util.AppContants.REQUIRED;
 import static com.bitlink.travelink.util.AppContants.mSharedPreferences;
 
@@ -93,12 +93,11 @@ public abstract class ChatFragment extends Fragment {
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplication().getApplicationContext());
 
-        if (mAuthCurrentUser != null) {
-            mUsername = mAuthCurrentUser.getDisplayName();
-            if (mAuthCurrentUser.getPhotoUrl() != null) {
-                mPhotoUrl = mAuthCurrentUser.getPhotoUrl().toString();
-            }
+        if (mUser != null) {
+            mUsername = mUser.getUsername();
+            mPhotoUrl = mUser.getPhotoUrl();
         }
+
         // Initialize ProgressBar and RecyclerView.
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mMessageRecyclerView = (RecyclerView) view.findViewById(R.id.messageRecyclerView);
@@ -133,7 +132,7 @@ public abstract class ChatFragment extends Fragment {
             protected void populateViewHolder(MessageViewHolder viewHolder, Message friendlyMessage, int position) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 viewHolder.messageTextView.setText(friendlyMessage.getText());
-                viewHolder.messengerTextView.setText(friendlyMessage.getName());
+                viewHolder.messengerTextView.setText(friendlyMessage.getAuthor());
                 if (friendlyMessage.getPhotoUrl() == null) {
                     viewHolder.messengerImageView
                             .setImageDrawable(ContextCompat.getDrawable(getActivity(),

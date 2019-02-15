@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.bitlink.travelink.R;
 import com.bitlink.travelink.model.User;
@@ -39,7 +40,7 @@ public class MainAppActivity extends Activity {
 
     public static User mUser;
 
-    private Context mContext;
+    public static Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,5 +110,17 @@ public class MainAppActivity extends Activity {
     public static String getUid() {
         FirebaseUser user = mAuth.getCurrentUser();
         return user != null ? user.getUid() : "";
+    }
+
+    public static void showText(String text) {
+        Toast.makeText(mContext, text, Toast.LENGTH_LONG).show();
+    }
+
+    public static Context getContext() {
+        return mContext;
+    }
+
+    public static void setContext(Context context) {
+        mContext = context;
     }
 }

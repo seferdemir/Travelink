@@ -70,7 +70,7 @@
 
                 <!-- Email Label -->
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -82,10 +82,10 @@
                         android:layout_marginTop="20dp"
                         android:hint="@string/email"
                         android:inputType="textEmailAddress" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Password Label -->
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp">
@@ -97,11 +97,11 @@
                         android:hint="@string/password"
                         android:inputType="textPassword"
                         android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Reset Passsword Button -->
 
-                <android.support.v7.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_reset_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -114,7 +114,7 @@
 
                 <!-- Change Password Button -->
 
-                <android.support.v7.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_change_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -127,7 +127,7 @@
 
                 <!-- Change Email Button -->
 
-                <android.support.v7.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_change_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

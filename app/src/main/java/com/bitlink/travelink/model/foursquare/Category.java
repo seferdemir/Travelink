@@ -1,8 +1,7 @@
 package com.bitlink.travelink.model.foursquare;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
-import com.bitlink.travelink.model.Tag;
 import com.yalantis.filter.model.FilterModel;
 
 import java.util.HashMap;

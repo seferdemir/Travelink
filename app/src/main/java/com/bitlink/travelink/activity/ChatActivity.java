@@ -1,9 +1,8 @@
 package com.bitlink.travelink.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +11,7 @@ import com.bitlink.travelink.R;
 import com.bitlink.travelink.fragment.PrivateChatFragment;
 import com.bitlink.travelink.model.User;
 import com.bitlink.travelink.util.AppContants;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

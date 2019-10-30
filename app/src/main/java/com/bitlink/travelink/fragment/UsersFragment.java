@@ -1,13 +1,10 @@
 package com.bitlink.travelink.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
-import com.bitlink.travelink.model.User;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
-
-import static com.bitlink.travelink.util.AppContants.ARG_USER;
 
 public class UsersFragment extends ConnectionListFragment {
 

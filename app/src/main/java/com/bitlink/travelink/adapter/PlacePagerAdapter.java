@@ -2,17 +2,13 @@ package com.bitlink.travelink.adapter;
 
 import android.content.Context;
 import android.os.Parcelable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import android.view.LayoutInflater;
 
 import com.bitlink.travelink.fragment.PlaceViewPagerFragment;
-import com.bitlink.travelink.model.Tag;
-import com.bitlink.travelink.model.foursquare.Category;
 import com.bitlink.travelink.model.foursquare.Item_;
-import com.bitlink.travelink.model.foursquare.Venue;
 
 import java.util.List;
 

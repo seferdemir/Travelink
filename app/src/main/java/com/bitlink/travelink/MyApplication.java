@@ -2,10 +2,8 @@ package com.bitlink.travelink;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.multidex.MultiDex;
+import androidx.multidex.MultiDex;
 
-import com.facebook.FacebookSdk;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class MyApplication extends Application {

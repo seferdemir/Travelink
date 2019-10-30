@@ -1,16 +1,11 @@
 package com.bitlink.travelink.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.bitlink.travelink.activity.ProfileActivity;
-import com.bitlink.travelink.model.User;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-
-import static com.bitlink.travelink.activity.MainAppActivity.mDatabase;
-import static com.bitlink.travelink.util.AppContants.ARG_USER;
 
 public class FollowersFragment extends ConnectionListFragment {
 

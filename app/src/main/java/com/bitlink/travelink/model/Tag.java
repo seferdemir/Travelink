@@ -1,8 +1,7 @@
 package com.bitlink.travelink.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
-import com.bitlink.travelink.model.foursquare.Category;
 import com.yalantis.filter.model.FilterModel;
 
 

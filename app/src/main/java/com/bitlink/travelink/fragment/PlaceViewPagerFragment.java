@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +71,7 @@ public class PlaceViewPagerFragment extends Fragment {
                 if (getItem().getTips().size() > 0) {
                     Tip tip = getItem().getTips().get(0);
 
-                    Glide.with(this)
+                    Glide.with(this.getContext())
                             .load(tip.getPhotourl())
                             .centerCrop()
                             .crossFade()

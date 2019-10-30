@@ -9,16 +9,16 @@ android {
             storePassword 'seferdemir'
         }
     }
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.2'
     defaultConfig {
         applicationId 'com.bitlink.travelink'
         minSdkVersion 18
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 2
         versionName "1.0.1"
         multiDexEnabled true
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.config
     }
     buildTypes {
@@ -30,46 +30,51 @@ android {
     }
     productFlavors {
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation  fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation ('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile('com.mikepenz:materialdrawer:5.8.1@aar') {
+    implementation ('com.mikepenz:materialdrawer:5.8.1@aar') {
         transitive = true
     }
-    compile files('libs/commons-codec-1.10.jar')
-    testCompile 'junit:junit:4.12'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
-    compile 'com.android.support:multidex:1.0.2'
+    implementation  files('libs/commons-codec-1.10.jar')
+    testImplementation  'junit:junit:4.12'
+    implementation 'androidx.multidex:multidex:2.0.0'
     //noinspection GradleCompatible
-    compile 'com.android.support:appcompat-v7:27.0.2'
-    compile 'com.android.support:design:27.0.2'
-    compile 'com.android.support:cardview-v7:27.0.2'
-    compile 'com.android.support:support-v4:27.0.2'
-    compile 'com.firebaseui:firebase-ui-database:0.6.2'
-    compile 'com.google.code.gson:gson:2.7'
-    compile 'com.facebook.android:facebook-android-sdk:4.1.0'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.github.vipulasri:timelineview:1.0.5'
-    compile 'com.google.android.gms:play-services:11.8.0'
-    compile 'com.google.android.gms:play-services-auth:11.8.0'
-    compile 'com.google.android.gms:play-services-location:11.8.0'
-    compile 'com.google.android.gms:play-services-maps:11.8.0'
-    compile 'com.google.firebase:firebase-auth:11.8.0'
-    compile 'com.google.firebase:firebase-database:11.8.0'
-    compile 'com.google.firebase:firebase-crash:11.8.0'
-    compile 'com.google.maps.android:android-maps-utils:0.4'
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-    compile 'com.jakewharton:butterknife:8.4.0'
-    compile 'de.hdodenhof:circleimageview:2.1.0'
-    compile 'com.joooonho:selectableroundedimageview:1.0.1'
-    compile 'com.android.support.test.espresso:espresso-core:3.0.1'
-    compile 'com.afollestad.material-dialogs:commons:0.9.2.3'
-    compile 'com.github.Yalantis:SearchFilter:v1.0.3'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.firebaseui:firebase-ui-database:0.6.2'
+    implementation 'com.google.code.gson:gson:2.7'
+    implementation 'com.facebook.android:facebook-android-sdk:4.1.0'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.github.vipulasri:timelineview:1.0.5'
+    implementation 'com.google.android.gms:play-services:11.8.0'
+    implementation 'com.google.android.gms:play-services-auth:11.8.0'
+    implementation 'com.google.android.gms:play-services-location:11.8.0'
+    implementation 'com.google.android.gms:play-services-maps:11.8.0'
+    implementation 'com.google.firebase:firebase-auth:11.8.0'
+    implementation 'com.google.firebase:firebase-database:11.8.0'
+    implementation 'com.google.firebase:firebase-crash:11.8.0'
+    implementation 'com.google.maps.android:android-maps-utils:0.4'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'de.hdodenhof:circleimageview:2.1.0'
+    implementation 'com.joooonho:selectableroundedimageview:1.0.1'
+    implementation 'androidx.test.espresso:espresso-core:3.1.0'
+    implementation 'com.afollestad.material-dialogs:commons:0.9.2.3'
+    implementation 'com.github.Yalantis:SearchFilter:v1.0.3'
+    implementation 'com.jakewharton:butterknife:10.0.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

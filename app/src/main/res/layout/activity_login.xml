@@ -47,7 +47,7 @@
 
                 android:orientation="vertical">
                 <!-- Email Label -->
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -60,10 +60,10 @@
                         android:hint="@string/email"
                         android:inputType="textEmailAddress"
                         android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Password Label -->
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -76,7 +76,7 @@
                         android:hint="@string/password"
                         android:inputType="textPassword"
                         android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <com.facebook.login.widget.LoginButton
                     android:id="@+id/login_with_facebook"
@@ -95,7 +95,7 @@
                     android:padding="6dp"
                     android:weightSum="2">
 
-                    <android.support.v7.widget.AppCompatButton
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_login"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
                         android:textColor="@android:color/white"
                         tools:ignore="RtlHardcoded" />
 
-                    <android.support.v7.widget.AppCompatButton
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_signup"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
